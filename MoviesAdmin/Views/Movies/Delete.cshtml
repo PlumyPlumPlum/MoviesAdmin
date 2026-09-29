@@ -1,0 +1,45 @@
+@model MoviesAdmin.Models.Movie
+
+@{
+    ViewData["Title"] = "Delete Movie";
+}
+
+<div class="delete-confirmation">
+    <h1>Delete Movie</h1>
+
+    <div class="alert alert-danger mt-4">
+        <h5>Are you sure?</h5>
+        <p class="mb-0">
+            You are about to permanently delete
+            <strong>@Model.Title</strong>.
+        </p>
+    </div>
+
+    <dl class="row mt-4">
+        <dt class="col-sm-3">Title</dt>
+        <dd class="col-sm-9">@Model.Title</dd>
+
+        <dt class="col-sm-3">Director</dt>
+        <dd class="col-sm-9">@Model.Director</dd>
+
+        <dt class="col-sm-3">Release Date</dt>
+        <dd class="col-sm-9">
+            @Model.ReleaseDate.ToString("MMMM d, yyyy")
+        </dd>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-danger">
+                Delete Movie
+            </button>
+
+            <a asp-action="Index"
+               class="btn btn-outline-secondary">
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>

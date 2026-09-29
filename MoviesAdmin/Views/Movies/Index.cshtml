@@ -1,0 +1,101 @@
+@model IEnumerable<MoviesAdmin.Models.Movie>
+
+@{
+    ViewData["Title"] = "Movies";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="mb-1">Movies</h1>
+        <p class="text-muted mb-0">
+            Manage the movie catalogue.
+        </p>
+    </div>
+
+    <a asp-action="Create" class="btn btn-primary">
+        + Add Movie
+    </a>
+</div>
+
+<div class="table-responsive movie-table-container">
+    <table class="table align-middle">
+        <thead>
+            <tr>
+                <th>Poster</th>
+                <th>Title</th>
+                <th>Release Date</th>
+                <th>Genre</th>
+                <th>Rating</th>
+                <th>Runtime</th>
+                <th class="text-end">Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @if (!string.IsNullOrWhiteSpace(item.PosterUrl))
+                        {
+                            <img src="@item.PosterUrl"
+                                 alt="@item.Title poster"
+                                 class="movie-poster-thumb" />
+                        }
+                        else
+                        {
+                            <div class="poster-placeholder">
+                                No Poster
+                            </div>
+                        }
+                    </td>
+
+                    <td>
+                        <strong>@item.Title</strong>
+                        <div class="text-muted small">
+                            Directed by @item.Director
+                        </div>
+                    </td>
+
+                    <td>
+                        @item.ReleaseDate.ToString("MMM d, yyyy")
+                    </td>
+
+                    <td>
+                        @item.Genre
+                    </td>
+
+                    <td>
+                        <span class="badge bg-secondary">
+                            @item.Rating
+                        </span>
+                    </td>
+
+                    <td>
+                        @(item.RuntimeMinutes / 60)h @(item.RuntimeMinutes % 60)m
+                    </td>
+
+                    <td class="text-end">
+                        <a asp-action="Details"
+                           asp-route-id="@item.Id"
+                           class="btn btn-sm btn-outline-secondary">
+                            View
+                        </a>
+
+                        <a asp-action="Edit"
+                           asp-route-id="@item.Id"
+                           class="btn btn-sm btn-outline-primary">
+                            Edit
+                        </a>
+
+                        <a asp-action="Delete"
+                           asp-route-id="@item.Id"
+                           class="btn btn-sm btn-outline-danger">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

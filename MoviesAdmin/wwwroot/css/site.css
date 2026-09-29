@@ -29,3 +29,102 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+body {
+    background: #f5f6f8;
+    color: #202124;
+}
+
+.navbar {
+    background: #17191d !important;
+    border-bottom: 3px solid #f4c430 !important;
+}
+
+.navbar-brand {
+    color: #ffffff !important;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.navbar .nav-link {
+    color: #d7d9dd !important;
+}
+
+    .navbar .nav-link:hover {
+        color: #ffffff !important;
+    }
+
+main {
+    padding-top: 1.5rem;
+}
+
+h1 {
+    font-weight: 700;
+    letter-spacing: -0.025em;
+}
+
+.movie-table-container {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+    .movie-table-container .table {
+        margin-bottom: 0;
+    }
+
+    .movie-table-container thead {
+        background: #f8f9fa;
+    }
+
+.movie-poster-thumb {
+    width: 48px;
+    height: 72px;
+    object-fit: cover;
+    border-radius: 6px;
+    background: #e9ecef;
+}
+
+.poster-placeholder {
+    width: 48px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-radius: 6px;
+    background: #e9ecef;
+    color: #6c757d;
+    font-size: 0.7rem;
+}
+
+.movie-detail-card {
+    border: 0;
+    border-radius: 14px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+.form-control {
+    border-radius: 8px;
+}
+
+.btn {
+    border-radius: 7px;
+}
+
+footer {
+    background: #ffffff;
+}
+
+.movie-navbar .navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.movie-navbar .navbar-toggler:focus {
+    box-shadow: 0 0 0 0.2rem rgba(244, 196, 48, 0.25);
+}
+
+/*.movie-navbar .navbar-toggler-icon {
+    filter: brightness(0) invert(1);
+}*/

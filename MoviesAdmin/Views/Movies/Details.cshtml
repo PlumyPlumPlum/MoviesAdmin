@@ -1,0 +1,65 @@
+@model MoviesAdmin.Models.Movie
+
+@{
+    ViewData["Title"] = "Movie Details";
+}
+
+<div class="mb-4">
+    <h1>@Model.Title</h1>
+    <p class="text-muted">Movie details</p>
+</div>
+
+<div class="card movie-detail-card">
+    <div class="card-body">
+        <div class="row g-4">
+            <div class="col-md-3">
+                @if (!string.IsNullOrWhiteSpace(Model.PosterUrl))
+                {
+                    <img src="@Model.PosterUrl"
+                         alt="@Model.Title poster"
+                         class="img-fluid rounded" />
+                }
+            </div>
+
+            <div class="col-md-9">
+                <dl class="row">
+                    <dt class="col-sm-3">Director</dt>
+                    <dd class="col-sm-9">@Model.Director</dd>
+
+                    <dt class="col-sm-3">Release Date</dt>
+                    <dd class="col-sm-9">
+                        @Model.ReleaseDate.ToString("MMMM d, yyyy")
+                    </dd>
+
+                    <dt class="col-sm-3">Genre</dt>
+                    <dd class="col-sm-9">@Model.Genre</dd>
+
+                    <dt class="col-sm-3">Rating</dt>
+                    <dd class="col-sm-9">@Model.Rating</dd>
+
+                    <dt class="col-sm-3">Runtime</dt>
+                    <dd class="col-sm-9">
+                        @(Model.RuntimeMinutes / 60)h
+                        @(Model.RuntimeMinutes % 60)m
+                    </dd>
+
+                    <dt class="col-sm-3">Synopsis</dt>
+                    <dd class="col-sm-9">@Model.Synopsis</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4 d-flex gap-2">
+    <a asp-action="Edit"
+       asp-route-id="@Model.Id"
+       class="btn btn-primary">
+        Edit Movie
+    </a>
+
+    <a asp-action="Index"
+       class="btn btn-outline-secondary">
+        Back to Movies
+    </a>
+</div>
