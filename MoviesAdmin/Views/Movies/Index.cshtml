@@ -32,22 +32,22 @@
         </thead>
 
         <tbody>
-            @foreach (var item in Model)
+            @foreach (var item in Model) // Loop through each movie in the model
             {
                 <tr>
                     <td>
-                        @if (!string.IsNullOrWhiteSpace(item.PosterUrl))
+                        @if (!string.IsNullOrWhiteSpace(item.PosterUrl)) // Check if PosterUrl is not null or empty
                         {
                             <img src="@item.PosterUrl"
                                  alt="@item.Title poster"
                                  class="movie-poster-thumb" />
-                        }
+                        } // If PosterUrl is null or empty, display a placeholder
                         else
                         {
                             <div class="poster-placeholder">
                                 No Poster
                             </div>
-                        }
+                        } 
                     </td>
 
                     <td>
@@ -62,12 +62,12 @@
                     </td>
 
                     <td>
-                        @item.Genre
+                        @Html.DisplayFor(modelItem => item.Genre.Title)
                     </td>
 
                     <td>
                         <span class="badge bg-secondary">
-                            @item.Rating
+                            @Html.DisplayFor(modelItem => item.AudienceRating.Title)
                         </span>
                     </td>
 

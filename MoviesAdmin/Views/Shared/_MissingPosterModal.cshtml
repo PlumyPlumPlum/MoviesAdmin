@@ -1,0 +1,54 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    <div class="modal fade"
+         id="missingPosterModal"
+         tabindex="-1"
+         aria-labelledby="missingPosterTitle"
+         aria-hidden="true">
+
+        <div class="modal-dialog modal-dialog-centered">
+
+            <div class="modal-content poster-confirm-modal">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="missingPosterTitle">
+                        No Movie Poster Selected
+                    </h5>
+
+                    <button type="button"
+                            class="btn-close btn-close-white"
+                            data-bs-dismiss="modal"
+                            aria-label="Close">
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <h6>Continue without a poster?</h6>
+
+                    <p class="text-muted mb-0">
+                        This movie will display the default
+                        "No Poster" placeholder until
+                        an image is uploaded.
+                    </p>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-outline-secondary"
+                            data-bs-dismiss="modal">
+                        Go Back
+                    </button>
+
+                    <button type="button"
+                            class="btn poster-confirm-button"
+                            id="confirmWithoutPoster">
+                        Continue Without Poster
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,54 @@
+@model MoviesAdmin.Models.AudienceRating
+
+@{
+    ViewData["Title"] = "Create Content Rating";
+}
+
+<h1 class="mb-1">Create Content Rating</h1>
+
+<p class="text-muted">
+    Add a new movie content classification.
+</p>
+
+<hr class="mb-4" />
+
+<div class="row">
+    <div class="col-md-5">
+        <form asp-action="Create" method="post">
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger">
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="Title" class="form-label">
+                    Content Rating
+                </label>
+
+                <input asp-for="Title"
+                       class="form-control"
+                       placeholder="e.g. PG-13" />
+
+                <span asp-validation-for="Title"
+                      class="text-danger"></span>
+            </div>
+
+            <div class="d-flex gap-2 align-items-center">
+                <button type="submit" class="btn btn-primary">
+                    Create Content Rating
+                </button>
+
+                <a asp-action="Index"
+                   class="btn btn-outline-secondary">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

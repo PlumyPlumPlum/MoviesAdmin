@@ -32,10 +32,10 @@
                     </dd>
 
                     <dt class="col-sm-3">Genre</dt>
-                    <dd class="col-sm-9">@Model.Genre</dd>
+                    <dd class="col-sm-9">@Model.Genre.Title</dd>
 
                     <dt class="col-sm-3">Rating</dt>
-                    <dd class="col-sm-9">@Model.Rating</dd>
+                    @Html.DisplayFor(model => model.AudienceRating.Title)
 
                     <dt class="col-sm-3">Runtime</dt>
                     <dd class="col-sm-9">
@@ -44,7 +44,7 @@
                     </dd>
 
                     <dt class="col-sm-3">Synopsis</dt>
-                    <dd class="col-sm-9">@Model.Synopsis</dd>
+                    <dd class="col-sm-9 movie-synopsis">@Model.Synopsis</dd>
                 </dl>
             </div>
         </div>

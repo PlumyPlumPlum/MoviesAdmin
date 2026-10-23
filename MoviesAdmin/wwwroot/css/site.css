@@ -125,6 +125,41 @@ footer {
     box-shadow: 0 0 0 0.2rem rgba(244, 196, 48, 0.25);
 }
 
-/*.movie-navbar .navbar-toggler-icon {
-    filter: brightness(0) invert(1);
-}*/
+.movie-synopsis {
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    line-height: 1.6;
+}
+
+.poster-confirm-modal {
+    border: none;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.18);
+}
+
+    .poster-confirm-modal .modal-header {
+        background-color: #17191d;
+        color: #ffffff;
+        border-bottom: 3px solid #f4c430;
+    }
+
+    .poster-confirm-modal .modal-body {
+        padding: 24px;
+    }
+
+    .poster-confirm-modal .modal-footer {
+        border-top: 1px solid #e5e7eb;
+        padding: 16px 24px;
+    }
+
+.poster-confirm-button {
+    background-color: #f4c430;
+    color: #17191d;
+    font-weight: 600;
+}
+
+    .poster-confirm-button:hover {
+        background-color: #e0b22b;
+        color: #17191d;
+    }

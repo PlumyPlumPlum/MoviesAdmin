@@ -10,8 +10,11 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <form asp-action="Edit" asp-route-id="@Model.Id" method="post"
+              enctype="multipart/form-data"
+              data-confirm-missing-poster
+              data-has-poster="@(string.IsNullOrWhiteSpace(Model.PosterUrl) ? "false" : "true")">
+            <div asp-validation-summary="All" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="mb-3">
                 <label asp-for="Title" class="form-label"></label>
@@ -28,50 +31,103 @@
                 <input asp-for="ReleaseDate" class="form-control" />
                 <span asp-validation-for="ReleaseDate" class="text-danger"></span>
             </div>
+
             <div class="mb-3">
-                <label asp-for="Genre" class="form-label"></label>
-                <input asp-for="Genre" class="form-control" />
-                <span asp-validation-for="Genre" class="text-danger"></span>
+                <label asp-for="GenreId" class="form-label"></label>
+                <select asp-for="GenreId"
+                        asp-items="ViewBag.GenreId"
+                        class="form-select">
+                    <option value="0">Select a genre</option>
+                </select>
+                <span asp-validation-for="GenreId" class="text-danger"></span>
             </div>
+
             <div class="mb-3">
                 <label asp-for="Synopsis" class="form-label"></label>
-                <textarea asp-for="Synopsis"
-                          class="form-control"
-                          rows="5"></textarea>
+                <textarea asp-for="Synopsis" class="form-control"
+                    rows="5"></textarea>
                 <span asp-validation-for="Synopsis" class="text-danger"></span>
             </div>
+
             <div class="mb-3">
-                <label asp-for="PosterUrl" class="form-label"></label>
-                <input asp-for="PosterUrl" class="form-control" />
-                <span asp-validation-for="PosterUrl" class="text-danger"></span>
+                <label for="posterFile" class="form-label">
+                    Movie Poster
+                </label>
+
+                @if (!string.IsNullOrWhiteSpace(Model.PosterUrl))
+                {
+                    <div class="mb-2">
+                        <img src="@Model.PosterUrl"
+                             alt="Current movie poster"
+                             class="movie-poster-thumb" />
+                    </div>
+                }
+
+                <input type="file"
+                       id="posterFile"
+                       name="posterFile"
+                       class="form-control"
+                       accept=".jpg,.jpeg,.png,.webp" />
+
+                <div class="form-text">
+                    Leave blank to keep the existing poster.
+                    Maximum file size: 5 MB.
+                </div>
+
+                @Html.ValidationMessage(
+                    "posterFile",
+                    "",
+                    new { @class = "text-danger" })
             </div>
+
             <div class="mb-3">
-                <label asp-for="Rating" class="form-label"></label>
-                <input asp-for="Rating" class="form-control" />
-                <span asp-validation-for="Rating" class="text-danger"></span>
+                <label asp-for="AudienceRatingId" class="form-label"></label>
+                <select asp-for="AudienceRatingId"
+                        asp-items="ViewBag.AudienceRatingId"
+                        class="form-select">
+                    <option value="0">Select a content rating</option>
+                </select>
+                <span asp-validation-for="AudienceRatingId" class="text-danger"></span>
             </div>
+
+            <div class="mb-3">
+                <label asp-for="AudienceScore" class="form-label"></label>
+                <input asp-for="AudienceScore"
+                       class="form-control"
+                       type="number"
+                       min="0"
+                       max="100" />
+                <span asp-validation-for="AudienceScore"
+                      class="text-danger"></span>
+                <div class="form-text">
+                    Optional audience score from 0 to 100%.
+                </div>
+            </div>
+
+
             <div class="mb-3">
                 <label asp-for="RuntimeMinutes" class="form-label"></label>
                 <input asp-for="RuntimeMinutes" class="form-control" />
                 <span asp-validation-for="RuntimeMinutes" class="text-danger"></span>
             </div>
-            <div class="mb-3">
-                <input type="submit" value="Save" class="btn btn-primary" />
+            <div class="d-flex gap-2 mt-3">
+                <button type="submit" class="btn btn-primary">
+                    Save Changes
+                </button>
+
+                <a asp-action="Index"
+                   class="btn btn-outline-secondary">
+                    Cancel
+                </a>
             </div>
         </form>
     </div>
 </div>
 
-<div class="d-flex gap-2">
-    <button type="submit" class="btn btn-primary">
-        Save Changes
-    </button>
-
-    <a asp-action="Index" class="btn btn-outline-secondary">
-        Cancel
-    </a>
-</div>
+<partial name="_MissingPosterModal" />
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
