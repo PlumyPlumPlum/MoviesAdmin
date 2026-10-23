@@ -14,7 +14,7 @@ builder.Services.AddSingleton(
 builder.Services.AddScoped<PosterStorageService>();
 
 var connectionString =
-    builder.Configuration.GetConnectionString("MovieDatabase") 
+    builder.Configuration.GetConnectionString("MovieDatabase")
     ?? throw new InvalidOperationException(
         "Connection string 'MovieDatabase' was not found."); // Retrieves connection string "MovieDatabase" from the config (e.g., appsettings.json). Throws an exception when not found.
 
