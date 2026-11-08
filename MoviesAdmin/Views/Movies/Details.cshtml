@@ -1,65 +1,321 @@
 @model MoviesAdmin.Models.Movie
 
 @{
-    ViewData["Title"] = "Movie Details";
+    ViewData["Title"] = Model.Title;
+
+    var myReview =
+        ViewData["MyReview"] as MoviesAdmin.Models.CriticReview;
+
+    var publishedReviewCount =
+        ViewData["PublishedReviewCount"] is int count ? count : 0;
+
+    var averageCriticRating =
+        ViewData["AverageCriticRating"] is double rating
+            ? (double?)rating
+            : null;
+
+    var publishedReviews =
+        ViewData["PublishedReviews"]
+            as List<MoviesAdmin.Models.CriticReview>
+        ?? new List<MoviesAdmin.Models.CriticReview>();
+
 }
 
-<div class="mb-4">
-    <h1>@Model.Title</h1>
-    <p class="text-muted">Movie details</p>
-</div>
+<div class="fb-details">
 
-<div class="card movie-detail-card">
-    <div class="card-body">
-        <div class="row g-4">
-            <div class="col-md-3">
-                @if (!string.IsNullOrWhiteSpace(Model.PosterUrl))
-                {
-                    <img src="@Model.PosterUrl"
-                         alt="@Model.Title poster"
-                         class="img-fluid rounded" />
-                }
-            </div>
+    @if (TempData["ReviewNotice"] is string notice)
+    {
+        <div class="alert alert-info mb-4" role="status">
+            @notice
+        </div>
+    }
 
-            <div class="col-md-9">
-                <dl class="row">
-                    <dt class="col-sm-3">Director</dt>
-                    <dd class="col-sm-9">@Model.Director</dd>
+    <!-- Page header -->
+    <header class="fb-details-header">
+        <div>
+            <a asp-controller="Movies"
+               asp-action="Index"
+               class="fb-details-back">
+                &larr; Back to Movies
+            </a>
 
-                    <dt class="col-sm-3">Release Date</dt>
-                    <dd class="col-sm-9">
-                        @Model.ReleaseDate.ToString("MMMM d, yyyy")
-                    </dd>
+            <p class="fb-details-eyebrow">
+                MOVIE DETAILS
+            </p>
 
-                    <dt class="col-sm-3">Genre</dt>
-                    <dd class="col-sm-9">@Model.Genre.Title</dd>
+            <h1 class="fb-details-title">
+                @Model.Title
+            </h1>
 
-                    <dt class="col-sm-3">Rating</dt>
-                    @Html.DisplayFor(model => model.AudienceRating.Title)
+            <p class="fb-details-director">
+                Directed by @Model.Director
+            </p>
+        </div>
 
-                    <dt class="col-sm-3">Runtime</dt>
-                    <dd class="col-sm-9">
-                        @(Model.RuntimeMinutes / 60)h
-                        @(Model.RuntimeMinutes % 60)m
-                    </dd>
+        @if (User.IsInRole("administrator"))
+        {
+            <a asp-action="Edit"
+               asp-route-id="@Model.Id"
+               class="btn fb-details-edit">
+                Edit Movie
+            </a>
+        }
+    </header>
 
-                    <dt class="col-sm-3">Synopsis</dt>
-                    <dd class="col-sm-9 movie-synopsis">@Model.Synopsis</dd>
+    <!-- Main movie layout -->
+    <div class="fb-details-grid">
+
+        <!-- Poster -->
+        <div class="fb-details-poster">
+            @if (!string.IsNullOrWhiteSpace(Model.PosterUrl))
+            {
+                <img src="@Model.PosterUrl"
+                     alt="Poster for @Model.Title" />
+            }
+            else
+            {
+                <div class="fb-details-poster-placeholder">
+                    No Poster Available
+                </div>
+            }
+        </div>
+
+        <!-- Movie information -->
+        <div class="fb-details-content">
+            <section class="fb-details-panel">
+                <h2>Movie Information</h2>
+
+                <dl class="fb-details-facts">
+
+                    <div>
+                        <dt>Release Date</dt>
+                        <dd>
+                            @Model.ReleaseDate.ToString("MMMM d, yyyy")
+                        </dd>
+                    </div>
+
+                    <div>
+                        <dt>Genre</dt>
+                        <dd>@(Model.Genre?.Title ?? "Unspecified")</dd>
+                    </div>
+
+                    <div>
+                        <dt>Content Rating</dt>
+                        <dd>
+                            <span class="fb-details-rating">
+                                @(Model.AudienceRating?.Title ?? "Not rated")
+                            </span>
+                        </dd>
+                    </div>
+
+                    <div>
+                        <dt>Runtime</dt>
+                        <dd>
+                            @(Model.RuntimeMinutes / 60)h
+                            @(Model.RuntimeMinutes % 60)m
+                        </dd>
+                    </div>
+
+                    @if (Model.AudienceScore.HasValue)
+                    {
+                        <div>
+                            <dt>Audience Score</dt>
+                            <dd>
+                                @(Model.AudienceScore.Value)%
+                            </dd>
+                        </div>
+                    }
                 </dl>
-            </div>
+
+                <!-- Critic ratings summary -->
+                <div class="fb-critic-summary">
+
+                    <h3>Critic Ratings</h3>
+
+                    <div class="fb-critic-stats">
+
+                        <div class="fb-critic-stat">
+                            <strong>
+                                @(averageCriticRating?.ToString("0.0") ?? "—")
+                                <small>/5</small>
+                            </strong>
+                            <span>Average Critic Rating</span>
+                        </div>
+
+                        <div class="fb-critic-stat">
+                            <strong>@publishedReviewCount</strong>
+                            <span>Published Reviews</span>
+                        </div>
+
+                    </div>
+
+                    @if (publishedReviewCount == 0)
+                    {
+                        <p class="text-muted small mt-3 mb-0">
+                            No published critic reviews yet.
+                        </p>
+                    }
+                </div>
+            </section>
+
+            <!-- Synopsis -->
+            <section class="fb-details-panel">
+                <h2>Synopsis</h2>
+
+                <p class="fb-details-synopsis">@Model.Synopsis?.Trim()</p>
+            </section>
+
+            <!-- Published reviews for administrators -->
+            @if (User.IsInRole("administrator"))
+            {
+                <section class="fb-details-panel fb-published-panel">
+
+                    <div class="fb-published-heading">
+                        <div>
+                            <p class="fb-details-eyebrow">
+                                CRITIC REVIEWS
+                            </p>
+                            <h2>Published Reviews</h2>
+                        </div>
+
+                        <span class="badge bg-dark">
+                            @publishedReviews.Count
+                            @(publishedReviews.Count == 1 ? "Review" : "Reviews")
+                        </span>
+                    </div>
+
+                    @if (publishedReviews.Count == 0)
+                    {
+                        <p class="text-muted mb-0">
+                            No critic reviews have been published
+                            for this movie yet.
+                        </p>
+                    }
+                    else
+                    {
+                        <div class="fb-published-list">
+
+                            @foreach (var review in publishedReviews)
+                            {
+                                <article class="fb-published-review">
+
+                                    <div class="fb-published-review-header">
+                                        <div>
+                                            <h3>@review.ReviewerName</h3>
+
+                                            @if (review.PublishedDate.HasValue)
+                                            {
+                                                <span class="fb-published-date">
+                                                    Published
+                                                    @review.PublishedDate.Value.ToString("MMMM d, yyyy")
+                                                    (UTC)
+                                                </span>
+                                            }
+                                        </div>
+
+                                        <div class="fb-published-score">
+                                            @review.Rating<span>/5</span>
+                                        </div>
+                                    </div>
+
+                                    <p class="fb-review-description">@review.Description.Trim()</p>
+
+                                </article>
+                            }
+
+                        </div>
+                    }
+                </section>
+            }
+
+            <!-- Critic's personal review -->
+            @if (User.IsInRole("critic"))
+            {
+                <section class="fb-details-panel fb-review-panel">
+
+                    <div class="fb-review-heading">
+                        <div>
+                            <p class="fb-details-eyebrow">
+                                CRITIC WORKSPACE
+                            </p>
+
+                            <h2>My Review</h2>
+                        </div>
+
+                        @if (myReview != null)
+                        {
+                            <span class="badge @(myReview.IsPublished
+                                  ? "bg-success"
+                                  : "bg-secondary")">
+                                @(myReview.IsPublished ? "Published" : "Draft")
+                            </span>
+                        }
+                    </div>
+
+                    @if (myReview == null)
+                    {
+                        <p class="text-muted">
+                            You haven't reviewed this movie yet.
+                            Share your thoughts and give it a rating.
+                        </p>
+
+                        <a asp-controller="CriticReviews"
+                           asp-action="Create"
+                           asp-route-movieId="@Model.Id"
+                           class="btn fb-details-edit">
+                            Write Review
+                        </a>
+                    }
+                    else
+                    {
+                        <div class="fb-review-score">
+                            <strong>@myReview.Rating<span>/5</span></strong>
+                            <span>Your rating</span>
+                        </div>
+
+                        <p class="fb-review-description">@myReview.Description.Trim()</p>
+
+                        @if (!myReview.IsPublished)
+                        {
+                            <p class="fb-review-note">
+                                Your draft is private and can be edited
+                                before publication.
+                            </p>
+
+                            <div class="fb-review-actions">
+
+                                <a asp-controller="CriticReviews"
+                                   asp-action="Edit"
+                                   asp-route-id="@myReview.Id"
+                                   class="btn fb-details-edit">
+                                    Edit Draft
+                                </a>
+
+                                <a asp-controller="CriticReviews"
+                                   asp-action="Publish"
+                                   asp-route-id="@myReview.Id"
+                                   class="btn btn-dark">
+                                    Publish Review
+                                </a>
+
+                                <a asp-controller="CriticReviews"
+                                   asp-action="Delete"
+                                   asp-route-id="@myReview.Id"
+                                   class="btn btn-outline-danger">
+                                    Delete Draft
+                                </a>
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="fb-review-note">
+                                Published reviews are permanent
+                                and cannot be edited or deleted.
+                            </p>
+                        }
+                    }
+                </section>
+            }
         </div>
     </div>
-</div>
-
-<div class="mt-4 d-flex gap-2">
-    <a asp-action="Edit"
-       asp-route-id="@Model.Id"
-       class="btn btn-primary">
-        Edit Movie
-    </a>
-
-    <a asp-action="Index"
-       class="btn btn-outline-secondary">
-        Back to Movies
-    </a>
 </div>

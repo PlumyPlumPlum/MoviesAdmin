@@ -17,7 +17,7 @@ namespace MoviesAdmin.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.12")
+                .HasAnnotation("ProductVersion", "10.0.13")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -37,6 +37,59 @@ namespace MoviesAdmin.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("AudienceRatings");
+                });
+
+            modelBuilder.Entity("MoviesAdmin.Models.CriticReview", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<bool>("IsPublished")
+                        .IsConcurrencyToken()
+                        .HasColumnType("bit");
+
+                    b.Property<int>("MovieId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("PublishedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ReviewerName")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("nvarchar(120)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MovieId", "CreatedBy")
+                        .IsUnique();
+
+                    b.ToTable("CriticReviews", t =>
+                        {
+                            t.HasCheckConstraint("CK_CriticReview_Rating", "[Rating] BETWEEN 0 AND 5");
+                        });
                 });
 
             modelBuilder.Entity("MoviesAdmin.Models.Genre", b =>
@@ -106,6 +159,17 @@ namespace MoviesAdmin.Migrations
                     b.ToTable("Movies");
                 });
 
+            modelBuilder.Entity("MoviesAdmin.Models.CriticReview", b =>
+                {
+                    b.HasOne("MoviesAdmin.Models.Movie", "Movie")
+                        .WithMany("CriticReviews")
+                        .HasForeignKey("MovieId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Movie");
+                });
+
             modelBuilder.Entity("MoviesAdmin.Models.Movie", b =>
                 {
                     b.HasOne("MoviesAdmin.Models.AudienceRating", "AudienceRating")
@@ -133,6 +197,11 @@ namespace MoviesAdmin.Migrations
             modelBuilder.Entity("MoviesAdmin.Models.Genre", b =>
                 {
                     b.Navigation("Movies");
+                });
+
+            modelBuilder.Entity("MoviesAdmin.Models.Movie", b =>
+                {
+                    b.Navigation("CriticReviews");
                 });
 #pragma warning restore 612, 618
         }

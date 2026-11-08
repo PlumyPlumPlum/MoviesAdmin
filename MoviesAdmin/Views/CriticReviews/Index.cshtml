@@ -1,0 +1,141 @@
+﻿@model IReadOnlyList<MoviesAdmin.Models.CriticReview>
+
+@{
+    ViewData["Title"] = "My Reviews";
+
+    var draftCount = Model.Count(r => !r.IsPublished);
+    var publishedCount = Model.Count(r => r.IsPublished);
+}
+
+<div class="fb-details">
+
+    <header class="mb-4">
+
+        <p class="fb-details-eyebrow">
+            CRITIC WORKSPACE
+        </p>
+
+        <h1>My Reviews</h1>
+
+        <p class="text-muted">
+            Manage your drafts and published movie reviews.
+        </p>
+
+    </header>
+
+    <!-- Review summary -->
+    <div class="fb-critic-stats mb-4">
+
+        <div class="fb-critic-stat">
+            <strong>@draftCount</strong>
+            <span>Draft Reviews</span>
+        </div>
+
+        <div class="fb-critic-stat">
+            <strong>@publishedCount</strong>
+            <span>Published Reviews</span>
+        </div>
+
+    </div>
+
+    @if (Model.Count == 0)
+    {
+        <section class="fb-details-panel">
+
+            <h2>No Reviews Yet</h2>
+
+            <p class="text-muted">
+                You haven't written any movie reviews.
+                Browse the movie library to get started.
+            </p>
+
+            <a asp-controller="Movies"
+               asp-action="Index"
+               class="btn fb-details-edit">
+                Browse Movies
+            </a>
+
+        </section>
+    }
+    else
+    {
+        @foreach (var review in Model)
+        {
+            <article class="fb-details-panel mb-3">
+
+                <div class="d-flex justify-content-between
+                    align-items-start gap-3 mb-3">
+
+                    <div>
+                        <h2 class="mb-1">
+                            @review.Movie.Title
+                        </h2>
+
+                        <p class="text-muted small mb-0">
+                            Rating: @review.Rating / 5
+                        </p>
+                    </div>
+
+                    <span class="badge @(review.IsPublished
+                          ? "bg-success"
+                          : "bg-secondary")">
+
+                        @(review.IsPublished
+                            ? "Published"
+                            : "Draft")
+
+                    </span>
+
+                </div>
+
+                <p class="fb-review-description">@review.Description.Trim()</p>
+
+                <div class="fb-review-actions">
+
+                    <a asp-controller="Movies"
+                       asp-action="Details"
+                       asp-route-id="@review.MovieId"
+                       class="btn btn-outline-secondary">
+                        View Movie
+                    </a>
+
+                    @if (!review.IsPublished)
+                    {
+                        <a asp-controller="CriticReviews"
+                           asp-action="Edit"
+                           asp-route-id="@review.Id"
+                           class="btn fb-details-edit">
+                            Edit Draft
+                        </a>
+
+                        <a asp-controller="CriticReviews"
+                           asp-action="Publish"
+                           asp-route-id="@review.Id"
+                           class="btn btn-dark">
+                            Publish
+                        </a>
+
+                        <a asp-controller="CriticReviews"
+                           asp-action="Delete"
+                           asp-route-id="@review.Id"
+                           class="btn btn-outline-danger">
+                            Delete
+                        </a>
+                    }
+
+                </div>
+
+                @if (review.IsPublished &&
+                     review.PublishedDate.HasValue)
+                {
+                    <p class="small text-muted mt-3 mb-0">
+                        Published on
+                        @review.PublishedDate.Value.ToString("MMMM d, yyyy")
+                    </p>
+                }
+
+            </article>
+        }
+    }
+
+</div>

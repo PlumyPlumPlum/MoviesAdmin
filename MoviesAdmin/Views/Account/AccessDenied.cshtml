@@ -1,0 +1,24 @@
+﻿@{
+    ViewData["Title"] = "Access Denied";
+}
+
+<div class="text-center py-5">
+
+    <h1 class="mb-3">Access Denied</h1>
+
+    <p class="lead">
+        You don't have permission to access this page.
+    </p>
+
+    <p class="text-muted">
+        Your account doesn't have the required role
+        to perform this action.
+    </p>
+
+    <a asp-controller="Movies"
+       asp-action="Index"
+       class="btn btn-primary mt-3">
+        Return to Movies
+    </a>
+
+</div>

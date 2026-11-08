@@ -9,6 +9,10 @@ namespace MoviesAdmin.Models
     {
         public int Id { get; set; }
 
+        // A movie can have multiple critic reviews, establishing a one-to-many relationship.
+        public ICollection<CriticReview> CriticReviews { get; set; }
+            = new List<CriticReview>();
+
         [Required]
         [StringLength(150)]
         public string Title { get; set; } = string.Empty;

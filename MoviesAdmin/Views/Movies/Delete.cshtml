@@ -2,20 +2,44 @@
 
 @{
     ViewData["Title"] = "Delete Movie";
+
+    // Determine whether this movie has associated critic reviews.
+    bool hasCriticReviews =
+        ViewData["HasCriticReviews"] is bool hasReviews && hasReviews;
 }
 
 <div class="delete-confirmation">
+
     <h1>Delete Movie</h1>
 
-    <div class="alert alert-danger mt-4">
-        <h5>Are you sure?</h5>
-        <p class="mb-0">
-            You are about to permanently delete
-            <strong>@Model.Title</strong>.
-        </p>
-    </div>
+    @if (hasCriticReviews)
+    {
+        <div class="alert alert-warning mt-4" role="alert">
+            <h5>Deletion Not Available</h5>
 
+            <p class="mb-0">
+                <strong>@Model.Title</strong> cannot be deleted
+                because it has associated critic reviews.
+                These reviews must be preserved.
+            </p>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-danger mt-4" role="alert">
+            <h5>Are you sure?</h5>
+
+            <p class="mb-0">
+                You are about to permanently delete
+                <strong>@Model.Title</strong>.
+                This action cannot be undone.
+            </p>
+        </div>
+    }
+
+    <!-- Movie information -->
     <dl class="row mt-4">
+
         <dt class="col-sm-3">Title</dt>
         <dd class="col-sm-9">@Model.Title</dd>
 
@@ -26,20 +50,33 @@
         <dd class="col-sm-9">
             @Model.ReleaseDate.ToString("MMMM d, yyyy")
         </dd>
+
     </dl>
 
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="Id" />
+    <!-- Available actions -->
+    <div class="d-flex flex-wrap gap-2 mt-4">
 
-        <div class="d-flex gap-2">
-            <button type="submit" class="btn btn-danger">
-                Delete Movie
-            </button>
+        @if (!hasCriticReviews)
+        {
+            <form asp-controller="Movies"
+                  asp-action="Delete"
+                  asp-route-id="@Model.Id"
+                  asp-antiforgery="true"
+                  method="post">
 
-            <a asp-action="Index"
-               class="btn btn-outline-secondary">
-                Cancel
-            </a>
-        </div>
-    </form>
+                <button type="submit" class="btn btn-danger">
+                    Delete Movie
+                </button>
+
+            </form>
+        }
+
+        <a asp-controller="Movies"
+           asp-action="Details"
+           asp-route-id="@Model.Id"
+           class="btn btn-outline-secondary">
+
+            @(hasCriticReviews ? "Back to Movie" : "Cancel")
+        </a>
+    </div>
 </div>

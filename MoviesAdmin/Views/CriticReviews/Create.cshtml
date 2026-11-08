@@ -1,0 +1,96 @@
+﻿@model MoviesAdmin.ViewModels.CriticReviewFormViewModel
+
+@{
+    ViewData["Title"] = "Write Review";
+}
+
+<div class="fb-details">
+
+    <header class="mb-4">
+        <p class="fb-details-eyebrow">
+            CRITIC WORKSPACE
+        </p>
+
+        <h1>Write a Review</h1>
+
+        <p class="text-muted">
+            Reviewing: <strong>@Model.MovieTitle</strong>
+        </p>
+    </header>
+
+    <section class="fb-details-panel">
+
+        <form asp-controller="CriticReviews"
+              asp-action="Create"
+              asp-antiforgery="true"
+              method="post">
+
+            <input type="hidden" asp-for="MovieId" />
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger mb-3"
+                 role="alert">
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="Rating"
+                       class="form-label fw-semibold">
+                </label>
+
+                <select asp-for="Rating"
+                        class="form-select">
+                    <option value="">Select a rating</option>
+
+                    @for (int rating = 0; rating <= 5; rating++)
+                    {
+                        <option value="@rating">
+                            @rating / 5
+                        </option>
+                    }
+                </select>
+
+                <span asp-validation-for="Rating"
+                      class="text-danger">
+                </span>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="Description"
+                       class="form-label fw-semibold">
+                </label>
+
+                <textarea asp-for="Description"
+                          class="form-control"
+                          rows="7"
+                          maxlength="1000">
+                </textarea>
+
+                <div class="form-text">
+                    Maximum 1,000 characters.
+                </div>
+
+                <span asp-validation-for="Description"
+                      class="text-danger">
+                </span>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit"
+                        class="btn fb-details-edit">
+                    Save Draft
+                </button>
+
+                <a asp-controller="Movies"
+                   asp-action="Details"
+                   asp-route-id="@Model.MovieId"
+                   class="btn btn-outline-secondary">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </section>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MoviesAdmin.Models;
 using MoviesAdmin.Data;
+using Microsoft.AspNetCore.Authorization;
 
+[Authorize(Roles = "administrator")]
 public class GenresController : Controller
 {
     private readonly MovieDbContext _context;

@@ -6,7 +6,11 @@ using MoviesAdmin.Data;
 using Azure;
 using MoviesAdmin.Services;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using Microsoft.Data.SqlClient;
 
+[Authorize(Roles = "administrator, critic")]
 public class MoviesController : Controller
 {
     private readonly MovieDbContext _context; // Reference to the MovieDbContext instance. The controller interacts with the DB through EF Core.
@@ -34,6 +38,7 @@ public class MoviesController : Controller
     } // Index action method: handles GET requests to the /MOVIES endpoint. Retrieves movie list from DB, returns a view that displays this list. Asynchronous, allows non-blocking database access.
 
     // GET: MOVIES/Details/5
+
     public async Task<IActionResult> Details(int? id)
     {
         if (id == null)
@@ -41,6 +46,7 @@ public class MoviesController : Controller
             return NotFound();
         }
 
+        // Retrieve the movie and its related information.
         var movie = await _context.Movies
             .Include(m => m.Genre)
             .Include(m => m.AudienceRating)
@@ -51,10 +57,49 @@ public class MoviesController : Controller
             return NotFound();
         }
 
+        // Calculate statistics using published reviews only.
+        var publishedReviews = _context.CriticReviews
+            .AsNoTracking()
+            .Where(r => r.MovieId == movie.Id && r.IsPublished);
+
+        ViewData["PublishedReviewCount"] =
+            await publishedReviews.CountAsync();
+
+        ViewData["AverageCriticRating"] =
+            await publishedReviews.AverageAsync(r => (double?)r.Rating);
+
+        if (User.IsInRole("administrator"))
+        {
+            ViewData["PublishedReviews"] = await _context.CriticReviews
+                .AsNoTracking()
+                .Where(r => r.MovieId == movie.Id && r.IsPublished)
+                .OrderByDescending(r => r.PublishedDate)
+                .ToListAsync();
+        }
+
+        // Retrieve only the current critic's review.
+        if (User.IsInRole("critic"))
+        {
+            var criticId =
+                User.FindFirstValue(ClaimTypes.NameIdentifier)
+                ?? User.FindFirstValue("sub");
+
+            if (!string.IsNullOrWhiteSpace(criticId))
+            {
+                ViewData["MyReview"] = await _context.CriticReviews
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(r =>
+                        r.MovieId == movie.Id &&
+                        r.CreatedBy == criticId);
+            }
+        }
+
         return View(movie);
-    } // Details action method...handles GET requests to the /MOVIES/Details/{id} endpoint. Takes an optional integer parameter id, which represents the ID of the movie to be displayed. If the id is null, it returns a NotFound result. Then queries the database for a movie with the specified ID. If no movie exists, returns a NotFound result. If movie is found, returns a view that displays movie details.
+    }
+    // Details action method...handles GET requests to the /MOVIES/Details/{id} endpoint. Takes an optional integer parameter id, which represents the ID of the movie to be displayed. If the id is null, it returns a NotFound result. Then queries the database for a movie with the specified ID. If no movie exists, returns a NotFound result. If movie is found, returns a view that displays movie details.
 
     // GET: MOVIES/Create
+    [Authorize(Roles = "administrator")]
     public async Task<IActionResult> Create()
     {
         await PopulateMovieDropdownsAsync();
@@ -66,6 +111,7 @@ public class MoviesController : Controller
     // To protect from overposting attacks, enable the specific properties you want to bind to.
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
 
+    [Authorize(Roles = "administrator")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(
@@ -112,6 +158,7 @@ public class MoviesController : Controller
 
 
     // GET: MOVIES/Edit/5
+    [Authorize(Roles = "administrator")]
     public async Task<IActionResult> Edit(int? id)
     {
         if (id == null)
@@ -134,7 +181,7 @@ public class MoviesController : Controller
     // To protect from overposting attacks, enable the specific properties you want to bind to.
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
 
-
+    [Authorize(Roles = "administrator")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(
@@ -215,9 +262,8 @@ public class MoviesController : Controller
         return View(movie);
     }
 
-
-
     // GET: MOVIES/Delete/5
+    [Authorize(Roles = "administrator")]
     public async Task<IActionResult> Delete(int? id)
     {
         if (id == null)
@@ -235,24 +281,61 @@ public class MoviesController : Controller
             return NotFound();
         }
 
+        bool hasReviews = await _context.CriticReviews
+            .AnyAsync(r => r.MovieId == movie.Id);
+
+        ViewData["HasCriticReviews"] = hasReviews;
+
         return View(movie);
     }
 
     // POST: MOVIES/Delete/5
+    [Authorize(Roles = "administrator")]
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int? id)
     {
-        var movie = await _context.Movies.FindAsync(id);
-        if (movie != null)
+        if (id == null)
+            return NotFound();
+
+        var movie = await _context.Movies.FindAsync(id.Value);
+
+        if (movie == null)
+            return NotFound();
+
+        // Preserve all reviews associated with this movie.
+        var hasReviews = await _context.CriticReviews
+            .AnyAsync(r => r.MovieId == movie.Id);
+
+        if (hasReviews)
         {
-            _context.Movies.Remove(movie);
+            TempData["ReviewNotice"] =
+                "This movie cannot be deleted because it has " +
+                "critic reviews associated with it.";
+
+            return RedirectToAction(
+                nameof(Details), new { id = movie.Id });
         }
 
-        await _context.SaveChangesAsync();
+        _context.Movies.Remove(movie);
+
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateException ex)
+            when (ex.InnerException is SqlException { Number: 547 })
+        {
+            // Another related record may have been added.
+            TempData["ReviewNotice"] =
+                "The movie has related records and cannot be deleted.";
+
+            return RedirectToAction(
+                nameof(Details), new { id = movie.Id });
+        }
+
         return RedirectToAction(nameof(Index));
     }
-
 
     private async Task PopulateMovieDropdownsAsync(Movie? movie = null)
     {

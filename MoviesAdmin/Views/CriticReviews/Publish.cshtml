@@ -1,0 +1,72 @@
+﻿@model MoviesAdmin.Models.CriticReview
+
+@{
+    ViewData["Title"] = "Publish Review";
+}
+
+<div class="fb-details">
+
+    <header class="mb-4">
+        <p class="fb-details-eyebrow">
+            CRITIC WORKSPACE
+        </p>
+
+        <h1>Publish Review</h1>
+
+        <p class="text-muted">
+            Reviewing: <strong>@Model.Movie.Title</strong>
+        </p>
+    </header>
+
+    <section class="fb-details-panel">
+
+        <div class="alert alert-warning mb-4">
+            <strong>Ready to publish?</strong>
+
+            <p class="mb-0 mt-2">
+                Once published, your review becomes permanent.
+                You will no longer be able to edit or delete it.
+            </p>
+        </div>
+
+        <h2 class="mb-3">Review Preview</h2>
+
+        <div class="mb-4">
+            <span class="badge bg-secondary mb-3">
+                Draft
+            </span>
+
+            <p class="fw-semibold">
+                Rating: @Model.Rating / 5
+            </p>
+
+            <p class="fb-review-description">@Model.Description.Trim()</p>
+        </div>
+
+        <form asp-controller="CriticReviews"
+              asp-action="Publish"
+              asp-route-id="@Model.Id"
+              asp-antiforgery="true"
+              method="post">
+
+            <div class="d-flex flex-wrap gap-2">
+
+                <button type="submit"
+                        class="btn fb-details-edit">
+                    Confirm Publication
+                </button>
+
+                <a asp-controller="Movies"
+                   asp-action="Details"
+                   asp-route-id="@Model.MovieId"
+                   class="btn btn-outline-secondary">
+                    Keep as Draft
+                </a>
+
+            </div>
+
+        </form>
+
+    </section>
+
+</div>

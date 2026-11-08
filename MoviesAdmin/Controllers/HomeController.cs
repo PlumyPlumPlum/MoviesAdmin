@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using MoviesAdmin.Models;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MoviesAdmin.Controllers
 {
     public class HomeController : Controller
     {
+        [AllowAnonymous]
         public IActionResult Index()
         {
             return View();

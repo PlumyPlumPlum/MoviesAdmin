@@ -1,9 +1,12 @@
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MoviesAdmin.Models;
 using MoviesAdmin.Data;
+using MoviesAdmin.Models;
+using Microsoft.AspNetCore.Authorization;
 
+[Authorize(Roles = "administrator")]
 public class AudienceRatingsController : Controller
 {
     private readonly MovieDbContext _context;

@@ -163,3 +163,548 @@ footer {
         background-color: #e0b22b;
         color: #17191d;
     }
+
+
+/* FoulBananas welcome page */
+
+.fb-welcome {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    min-height: 520px;
+    background: #17191d;
+    color: #ffffff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+}
+
+.fb-welcome-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: clamp(2rem, 5vw, 4rem);
+}
+
+.fb-welcome-label {
+    color: #f4c430;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    margin-bottom: 1.5rem;
+}
+
+.fb-welcome h1 {
+    font-size: clamp(2.2rem, 4vw, 3.8rem);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+}
+
+.fb-welcome-description {
+    color: #d7d9dd;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    max-width: 440px;
+    margin-bottom: 2rem;
+}
+
+.fb-welcome-button {
+    background: #f4c430;
+    color: #17191d;
+    padding: 0.85rem 2.5rem;
+    font-weight: 700;
+    border-radius: 8px;
+}
+
+    .fb-welcome-button:hover {
+        background: #e3b629;
+        color: #17191d;
+    }
+
+    .fb-welcome-button:focus-visible {
+        outline: 3px solid #ffffff;
+        outline-offset: 3px;
+    }
+
+.fb-welcome-footer {
+    color: #aeb2b9;
+    font-size: 0.85rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0;
+}
+
+.fb-welcome-artwork {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: #fffaf1;
+}
+
+.fb-welcome-logo {
+    display: block;
+    width: 100%;
+    max-width: 420px;
+    height: auto;
+}
+
+/* Responsive welcome page */
+
+@media (max-width: 767px) {
+    .fb-welcome {
+        grid-template-columns: 1fr;
+    }
+
+    .fb-welcome-artwork {
+        grid-row: 1;
+        padding: 1.5rem;
+    }
+
+    .fb-welcome-logo {
+        max-width: 250px;
+    }
+
+    .fb-welcome-content {
+        padding: 2rem;
+    }
+
+    .fb-welcome h1 {
+        font-size: 2.3rem;
+    }
+}
+
+
+/* Movie Details - Sprint 2 */
+
+.fb-details {
+    max-width: 1160px;
+    margin: 0 auto 3rem;
+}
+
+/* Header */
+
+.fb-details-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.fb-details-back {
+    display: inline-block;
+    color: #667085;
+    text-decoration: none;
+    font-size: 0.9rem;
+    margin-bottom: 1.25rem;
+}
+
+    .fb-details-back:hover {
+        color: #17191d;
+        text-decoration: underline;
+    }
+
+.fb-details-eyebrow {
+    color: #927000;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    margin-bottom: 0.5rem;
+}
+
+.fb-details-title {
+    font-size: clamp(2.1rem, 4vw, 3.25rem);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 0.75rem;
+}
+
+.fb-details-director {
+    color: #667085;
+    margin-bottom: 0;
+    font-size: 1rem;
+}
+
+.fb-details-edit {
+    background: #f4c430;
+    color: #17191d;
+    font-weight: 700;
+    padding: 0.75rem 1.5rem;
+}
+
+    .fb-details-edit:hover {
+        background: #e0b22b;
+        color: #17191d;
+    }
+
+/* Two-column layout */
+
+.fb-details-grid {
+    display: grid;
+    grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
+    align-items: start;
+    gap: 1.75rem;
+}
+
+/* Poster */
+
+.fb-details-poster {
+    background: #ffffff;
+    padding: 0.7rem;
+    border-radius: 14px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.06);
+}
+
+    .fb-details-poster img {
+        display: block;
+        width: 100%;
+        height: auto;
+        aspect-ratio: 2 / 3;
+        object-fit: contain;
+        border-radius: 8px;
+        background: #f5f6f8;
+    }
+
+.fb-details-poster-placeholder {
+    aspect-ratio: 2 / 3;
+    display: grid;
+    place-items: center;
+    background: #e9ecef;
+    color: #667085;
+    text-align: center;
+    border-radius: 8px;
+}
+
+/* Information panels */
+
+.fb-details-content {
+    display: grid;
+    gap: 1.25rem;
+    min-width: 0;
+}
+
+.fb-details-panel {
+    background: #ffffff;
+    padding: 1.75rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+}
+
+    .fb-details-panel h2 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+    }
+
+.fb-details-facts {
+    margin-bottom: 0;
+}
+
+    .fb-details-facts > div {
+        display: grid;
+        grid-template-columns: 150px minmax(0, 1fr);
+        gap: 1rem;
+        padding: 0.9rem 0;
+        border-bottom: 1px solid #eef0f3;
+    }
+
+        .fb-details-facts > div:first-child {
+            padding-top: 0;
+        }
+
+        .fb-details-facts > div:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+    .fb-details-facts dt {
+        color: #667085;
+        font-weight: 600;
+    }
+
+    .fb-details-facts dd {
+        margin: 0;
+        font-weight: 500;
+        overflow-wrap: anywhere;
+    }
+
+.fb-details-rating {
+    display: inline-block;
+    background: #17191d;
+    color: #ffffff;
+    border-radius: 6px;
+    padding: 0.2rem 0.65rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.fb-details-synopsis {
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    line-height: 1.75;
+    color: #475467;
+    margin: 0;
+}
+
+/* Responsive layout */
+
+@media (max-width: 767px) {
+    .fb-details-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .fb-details-poster {
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto;
+    }
+
+    .fb-details-header {
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .fb-details-panel {
+        padding: 1.25rem;
+    }
+
+    .fb-details-facts > div {
+        grid-template-columns: 1fr;
+        gap: 0.35rem;
+    }
+
+    .fb-details-title {
+        font-size: 2rem;
+    }
+}
+
+
+/* Critic review panel */
+
+.fb-review-panel {
+    border-top: 3px solid #f4c430;
+}
+
+.fb-review-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+    .fb-review-heading h2 {
+        margin-bottom: 0;
+    }
+
+    .fb-review-heading .fb-details-eyebrow {
+        margin-bottom: 0.5rem;
+    }
+
+.fb-review-score {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+    .fb-review-score strong {
+        font-size: 2.5rem;
+        font-weight: 800;
+        line-height: 1;
+        color: #17191d;
+    }
+
+        .fb-review-score strong span {
+            color: #667085;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+    .fb-review-score > span {
+        color: #667085;
+        font-size: 0.9rem;
+    }
+
+.fb-review-description {
+    color: #344054;
+    line-height: 1.75;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    margin-bottom: 1.25rem;
+}
+
+.fb-review-note {
+    color: #667085;
+    font-size: 0.85rem;
+    border-top: 1px solid #eef0f3;
+    padding-top: 1rem;
+    margin-bottom: 0;
+}
+
+
+/* Consistent critic review action buttons */
+
+.fb-review-actions {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+    .fb-review-actions .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 145px;
+        min-height: 48px;
+        padding: 0.75rem 1.25rem;
+        line-height: 1.2;
+        text-align: center;
+        font-weight: 600;
+        border-radius: 8px;
+    }
+
+/* Stack actions cleanly on smaller phones */
+
+@media (max-width: 480px) {
+    .fb-review-actions .btn {
+        width: 100%;
+    }
+}
+
+
+/* Published critic statistics */
+
+.fb-critic-summary {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+    .fb-critic-summary h3 {
+        font-size: 1.05rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+.fb-critic-stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+}
+
+.fb-critic-stat {
+    background: #f7f8fa;
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+}
+
+    .fb-critic-stat strong {
+        display: block;
+        color: #17191d;
+        font-size: 1.8rem;
+        font-weight: 800;
+        line-height: 1.2;
+        margin-bottom: 0.4rem;
+    }
+
+        .fb-critic-stat strong small {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #667085;
+        }
+
+    .fb-critic-stat > span {
+        display: block;
+        font-size: 0.85rem;
+        color: #667085;
+    }
+
+@media (max-width: 480px) {
+    .fb-critic-stats {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* Administrator published reviews */
+
+.fb-published-panel {
+    border-top: 3px solid #f4c430;
+}
+
+.fb-published-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+    .fb-published-heading h2 {
+        margin-bottom: 0;
+    }
+
+    .fb-published-heading .fb-details-eyebrow {
+        margin-bottom: 0.5rem;
+    }
+
+.fb-published-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.fb-published-review {
+    padding: 1.25rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    background: #fafafa;
+}
+
+.fb-published-review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+    .fb-published-review-header h3 {
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 0.35rem;
+    }
+
+.fb-published-date {
+    color: #667085;
+    font-size: 0.8rem;
+}
+
+.fb-published-score {
+    flex-shrink: 0;
+    color: #17191d;
+    font-size: 1.7rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+    .fb-published-score span {
+        color: #667085;
+        font-size: 0.95rem;
+        font-weight: 500;
+    }
+
+.fb-published-review .fb-review-description {
+    margin-bottom: 0;
+}
