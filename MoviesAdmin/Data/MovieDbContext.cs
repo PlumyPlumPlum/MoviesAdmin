@@ -18,6 +18,8 @@ namespace MoviesAdmin.Data
 
         public DbSet<CriticReview> CriticReviews => Set<CriticReview>(); // DbSet<CriticReview> = collection of all CriticReview entities that can be queried from the DB. Allows CRUD operations on the CriticReview entities.
 
+        public DbSet<UserSnapshot> UserSnapshots { get; set; } // DbSet<UserSnapshot> = collection of all UserSnapshot entities that can be queried from the DB. Allows CRUD operations on the UserSnapshot entities.
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -56,6 +58,10 @@ namespace MoviesAdmin.Data
                 .WithMany(a => a.Movies)
                 .HasForeignKey(m => m.AudienceRatingId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<UserSnapshot>()
+                .HasIndex(u => u.Auth0UserId)
+                .IsUnique();
         }
     }
 }

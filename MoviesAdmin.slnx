@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="FoulBananasApi/FoulBananasApi.csproj" Id="b13d9a29-9f1d-4c4a-b4dd-de36b8734897" />
   <Project Path="MoviesAdmin/MoviesAdmin.csproj" />
 </Solution>

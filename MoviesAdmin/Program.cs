@@ -20,6 +20,8 @@ builder.Services.AddAuth0WebAppAuthentication(options =>
     options.ClientId = builder.Configuration["Auth0:ClientId"]
         ?? throw new InvalidOperationException(
             "Auth0 ClientId is missing.");
+
+    options.Scope = "openid profile email";
 });
 
 // Configure cookie authentication options
@@ -54,6 +56,14 @@ builder.Services.AddDbContext<MovieDbContext>(options =>
 
 var app = builder.Build();
 
+var dbTarget =
+    new Microsoft.Data.SqlClient.SqlConnectionStringBuilder(connectionString);
+
+app.Logger.LogWarning(
+    "MOVIESADMIN DATABASE: {Server} / {Database}",
+    dbTarget.DataSource,
+    dbTarget.InitialCatalog);
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -68,9 +78,11 @@ app.UseAuthorization(); // Enables authorization capabilities, allows the app to
 
 app.MapStaticAssets(); // Registers static assets such as CSS, JavaScript, and images.
 
+app.MapControllers(); // Registers controller endpoints, allowing the app to handle requests to controller actions (e.g., API endpoints and MVC actions).
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
-    .WithStaticAssets();
+    .WithStaticAssets(); // Registers a default route for MVC controllers, specifying that if no controller or action is provided in the URL, it should default to the "Home" controller and "Index" action. The optional "id" parameter can be included in the URL. The route is also configured to serve static assets.
 
 app.Run();

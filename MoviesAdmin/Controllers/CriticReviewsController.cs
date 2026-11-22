@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using MoviesAdmin.Data;
 using MoviesAdmin.Models;
 using MoviesAdmin.ViewModels;
+using System.Security.Claims;
 
 namespace MoviesAdmin.Controllers
 {
@@ -24,6 +25,35 @@ namespace MoviesAdmin.Controllers
         private string? CurrentCriticId =>
             User.FindFirstValue(ClaimTypes.NameIdentifier)
             ?? User.FindFirstValue("sub");
+
+        private string GetReviewerName()
+        {
+            var firstName =
+                User.FindFirstValue("given_name")
+                ?? User.FindFirstValue(ClaimTypes.GivenName);
+
+            var lastName =
+                User.FindFirstValue("family_name")
+                ?? User.FindFirstValue(ClaimTypes.Surname);
+
+            var fullName = $"{firstName} {lastName}".Trim();
+
+            var reviewerName = !string.IsNullOrWhiteSpace(fullName)
+                ? fullName
+                : User.FindFirstValue("name")
+                  ?? User.FindFirstValue(ClaimTypes.Name)
+                  ?? User.Identity?.Name;
+
+            if (string.IsNullOrWhiteSpace(reviewerName)
+                || reviewerName.Contains('@'))
+            {
+                reviewerName = "Critic";
+            }
+
+            return reviewerName.Length > 120
+                ? reviewerName[..120]
+                : reviewerName;
+        }
 
         // GET: CriticReviews
         [HttpGet]
@@ -133,13 +163,7 @@ namespace MoviesAdmin.Controllers
                 return View(form);
             }
 
-            var reviewerName =
-                User.Identity?.Name
-                ?? User.FindFirstValue(ClaimTypes.Email)
-                ?? "Critic";
-
-            if (reviewerName.Length > 120)
-                reviewerName = reviewerName[..120];
+            var reviewerName = GetReviewerName();
 
             // All ownership and publication fields are server-controlled.
             var review = new CriticReview
@@ -448,6 +472,8 @@ namespace MoviesAdmin.Controllers
                     "Details", "Movies",
                     new { id = review.MovieId });
             }
+
+            review.ReviewerName = GetReviewerName();
 
             // Publishing is permanent.
             review.IsPublished = true;
